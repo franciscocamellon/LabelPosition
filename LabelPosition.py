@@ -22,6 +22,7 @@
  ***************************************************************************/
 """
 # Initialize Qt resources from file resources.py
+from .resources import *
 # Import the code for the dialog
 import os.path
 
@@ -137,7 +138,7 @@ class LabelPosition:
         :rtype: QAction
         """
 
-        icon = QIcon(':/plugins/LabelPosition/icon.png')
+        icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
         action.setEnabled(enabled_flag)
@@ -190,18 +191,19 @@ class LabelPosition:
         if n_sel > 0:
             layer.startEditing()
             for feature in selection:
-                nfield = int(feature['offset_quad'])
-                if nfield < 8:
-                    nfield += 1
-                    layer.changeAttributeValue(feature.id(), 4, nfield)
+                pos = feature['offset_quad']
+                pos = 0 if not pos else int(pos)
+                if pos < 8:
+                    pos += 1
+                    layer.changeAttributeValue(feature.id(), 4, pos)
                     layer.triggerRepaint()
-                elif nfield == 8:
-                    nfield = 0
-                    layer.changeAttributeValue(feature.id(), 4, nfield)
+                elif pos == 8:
+                    pos = 0
+                    layer.changeAttributeValue(feature.id(), 4, pos)
                     layer.triggerRepaint()
                 else:
-                    nfield = 0
-                    layer.changeAttributeValue(feature.id(), 4, nfield)
+                    pos = 0
+                    layer.changeAttributeValue(feature.id(), 4, pos)
                     layer.triggerRepaint()
             layer.commitChanges()
         else:

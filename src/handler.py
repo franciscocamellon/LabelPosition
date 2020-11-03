@@ -24,22 +24,21 @@
 
 from PyQt5.QtCore import QVariant
 from PyQt5.QtWidgets import QAction, QMessageBox
+from qgis.PyQt.Qt import QObject
 from qgis.core import QgsProject, QgsWkbTypes, QgsField, QgsFields
 from qgis.utils import *
 
 
-class Manager:
+class Manager(QObject):
 
-    def __init__(self, iface):
+    def __init__(self, iface=None):
         self.iface = iface
 
-
-    def setQuadrantPos(self):
-        layer = self.iface.activeLayer()
-        selected = layer.selectedFeatures()
-        number_sel_feat = layer.selectedFeatureCount()
-        field_name = 'offset_quad'
-        self.validate_field(layer)
+    def setQuadrantPos(self, layer):
+        # print(self.field_name)
+        print(layer)
+        print(layer.selectedFeatures())
+        print(layer.selectedFeatureCount())
 
         # if self.number_sel_feat > 0:
         #     self.layer.startEditing()
@@ -64,37 +63,12 @@ class Manager:
         #                          "Please select at least one feature from rel_ponto_cotado_altimetrico_p layer!")
 
     def validate_field(self, layer):
-        field_index = self.layer.fields().indexFromName(self.field_name)
 
         for field in layer.fields():
-            try:
-                if field == self.field_name:
-                    QMessageBox.critical(self.iface.mainWindow(), "Error", "field exists")
-            except KeyError:
-                QMessageBox.critical(self.iface.mainWindow(), "Error", "field does not exists")
-                break
+            if field.name() == self.field_name:
+                return layer
 
-
-""""
-    def geomHandler(self):
-        layer = iface.activeLayer()
-        selection = layer.selectedFeatures()
-        n_sel = layer.selectedFeatureCount()
-        #features = layer.getFeatures()
-        for feature in self.n_sel:
-        # retrieve every feature with its geometry and attributes
-        print("Feature ID: ", feature.id())
-        # fetch geometry
-        # show some information about the feature geometry
-        geom = feature.geometry()
-        geomSingleType = QgsWkbTypes.isSingleType(geom.wkbType())
-        if geom.type() == QgsWkbTypes.PointGeometry:
-        # the geometry type can be of single or multi type
-            if geomSingleType:
-                x = geom.asPoint()
-            pass
-            elif:
-                x = geom.asMultiPoint()
-            print("MultiPoint: ", x)
-        elif geom.type() == QgsWkbTypes.LineGeometry:
-"""
+            else:
+                QMessageBox.critical(
+                    self.iface.mainWindow(), "Error", "field does not exists")
+                return layer

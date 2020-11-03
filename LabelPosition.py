@@ -27,11 +27,12 @@ from PyQt5.QtCore import QSettings, QTranslator, qVersion
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction
 from qgis.utils import *
+
 from .src.handler import Manager
 from .resources import *
 
 
-class LabelPosition(object):
+class LabelPosition():
     """QGIS Plugin Implementation."""
 
     def __init__(self, iface):
@@ -67,6 +68,12 @@ class LabelPosition(object):
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
+
+        # Set custom variables
+        self.field_name = 'offset_quad'
+        self.lyr = self.iface.activeLayer()
+        self.selected = self.lyr.selectedFeatures()
+        self.number_sel_feat = self.lyr.selectedFeatureCount()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -181,7 +188,10 @@ class LabelPosition(object):
     def run(self):
         """Run method that performs all the real work"""
 
-        Manager.setQuadrantPos()
+        a = Manager.validate_field(self, self.lyr)
+        print(a)
+
+        # Manager.setQuadrantPos(self, a)
 
 
 

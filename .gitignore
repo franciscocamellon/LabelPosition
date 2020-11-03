@@ -69,3 +69,4 @@ metadata.txt
 pb_tool.cfg
 plugin_upload.py
 pylintrc
+compile_resources.bat

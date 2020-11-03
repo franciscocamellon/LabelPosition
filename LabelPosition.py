@@ -31,7 +31,7 @@ from .src.handler import Manager
 from .resources import *
 
 
-class LabelPosition:
+class LabelPosition(object):
     """QGIS Plugin Implementation."""
 
     def __init__(self, iface):
@@ -181,7 +181,7 @@ class LabelPosition:
     def run(self):
         """Run method that performs all the real work"""
 
-        Manager.setQuadrantPos(self)
+        Manager.setQuadrantPos()
 
 
 

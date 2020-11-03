@@ -21,16 +21,14 @@
  *                                                                         *
  ***************************************************************************/
 """
-# Initialize Qt resources from file resources.py
-from .resources import *
-# Import the code for the dialog
 import os.path
 
 from PyQt5.QtCore import QSettings, QTranslator, qVersion
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QMessageBox
-from qgis.core import QgsProject
+from PyQt5.QtWidgets import QAction
 from qgis.utils import *
+from .src.handler import Manager
+from .resources import *
 
 
 class LabelPosition:
@@ -69,8 +67,6 @@ class LabelPosition:
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
-        # -- variables
-
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -86,7 +82,6 @@ class LabelPosition:
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('LabelPosition', message)
-
 
     def add_action(
         self,
@@ -165,7 +160,7 @@ class LabelPosition:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/LabelPosition/icon.png'
+        icon_path = ':/plugins/labelposition/icon.png'
         self.add_action(
             icon_path,
             text=self.tr(u'Label Quadrant Position'),
@@ -175,7 +170,6 @@ class LabelPosition:
         # will be set False in run()
         self.first_start = True
 
-
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -184,36 +178,10 @@ class LabelPosition:
                 action)
             self.iface.removeToolBarIcon(action)
 
-    def setQuadrantPos(self):
-        layer = QgsProject.instance().mapLayersByName('rel_ponto_cotado_altimetrico_p')[0]
-        selection = layer.selectedFeatures()
-        n_sel = layer.selectedFeatureCount()
-        if n_sel > 0:
-            layer.startEditing()
-            for feature in selection:
-                pos = feature['offset_quad']
-                pos = 0 if not pos else int(pos)
-                if pos < 8:
-                    pos += 1
-                    layer.changeAttributeValue(feature.id(), 4, pos)
-                    layer.triggerRepaint()
-                elif pos == 8:
-                    pos = 0
-                    layer.changeAttributeValue(feature.id(), 4, pos)
-                    layer.triggerRepaint()
-                else:
-                    pos = 0
-                    layer.changeAttributeValue(feature.id(), 4, pos)
-                    layer.triggerRepaint()
-            layer.commitChanges()
-        else:
-            QMessageBox.critical(iface.mainWindow(), "Error",
-                                 "Please select at least one feature from rel_ponto_cotado_altimetrico_p layer!")
-
     def run(self):
         """Run method that performs all the real work"""
 
-        self.setQuadrantPos()
+        Manager.setQuadrantPos(self)
 
 
 

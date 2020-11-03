@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/plugins/LabelPosition" >
+    <qresource prefix="/plugins/labelposition" >
         <file>icon.png</file>
     </qresource>
 </RCC>

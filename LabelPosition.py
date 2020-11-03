@@ -29,6 +29,7 @@ from PyQt5.QtWidgets import QAction
 from qgis.utils import *
 
 from .src.handler import Manager
+from .src.gui import LabelPosition_dialog
 from .resources import *
 
 
@@ -70,10 +71,11 @@ class LabelPosition():
         self.first_start = None
 
         # Set custom variables
-        self.field_name = 'offset_quad'
+        self.field_name = 'quadrant_position'
         self.lyr = self.iface.activeLayer()
         self.selected = self.lyr.selectedFeatures()
         self.number_sel_feat = self.lyr.selectedFeatureCount()
+        self.dlg = LabelPosition_dialog.LabelPositionDialog()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):

@@ -28,11 +28,14 @@ from qgis.PyQt.Qt import QObject
 from qgis.core import QgsProject, QgsWkbTypes, QgsField, QgsFields
 from qgis.utils import *
 
+from .gui import LabelPosition_dialog
+
 
 class Manager(QObject):
 
     def __init__(self, iface=None):
         self.iface = iface
+        
 
     def setQuadrantPos(self, layer):
         # print(self.field_name)
@@ -69,6 +72,11 @@ class Manager(QObject):
                 return layer
 
             else:
-                QMessageBox.critical(
-                    self.iface.mainWindow(), "Error", "field does not exists")
+                self.dlg.show()
+                result = self.dlg.exec_()
+                print(result)
+                # See if OK was pressed
+                if result and self.dlg.virtual_check.isChecked():
+                    QMessageBox.critical(
+                        self.iface.mainWindow(), "Error", "field does not exists")
                 return layer

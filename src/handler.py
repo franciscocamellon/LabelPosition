@@ -29,19 +29,21 @@ from qgis.core import QgsProject, QgsWkbTypes, QgsField, QgsFields
 from qgis.utils import *
 
 from .gui import LabelPosition_dialog
+from LabelPosition import LabelPosition
 
 
 class Manager(QObject):
 
-    def __init__(self, iface=None):
+    def __init__(self, layer, iface=None):
+        super().__init__()
         self.iface = iface
         
 
-    def setQuadrantPos(self, layer):
+    def setQuadrantPos(self):
         # print(self.field_name)
-        print(layer)
-        print(layer.selectedFeatures())
-        print(layer.selectedFeatureCount())
+        print('layer: ', self.lyr.name())
+        print('selecionados: ', self.selected)
+        print('numero selecionados: ', self.number_sel_feat)
 
         # if self.number_sel_feat > 0:
         #     self.layer.startEditing()
@@ -65,11 +67,11 @@ class Manager(QObject):
         #     QMessageBox.critical(self.iface.mainWindow(), "Error",
         #                          "Please select at least one feature from rel_ponto_cotado_altimetrico_p layer!")
 
-    def validate_field(self, layer):
+    def validate_field(self):
 
-        for field in layer.fields():
+        for field in self.lyr.fields():
             if field.name() == self.field_name:
-                return layer
+                return self.lyr
 
             else:
                 self.dlg.show()
@@ -79,4 +81,4 @@ class Manager(QObject):
                 if result and self.dlg.virtual_check.isChecked():
                     QMessageBox.critical(
                         self.iface.mainWindow(), "Error", "field does not exists")
-                return layer
+                return self.lyr

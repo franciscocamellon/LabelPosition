@@ -22,10 +22,12 @@
  ***************************************************************************/
 """
 
-import os
+import os, sys
 
 from PyQt5 import uic
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QApplication, QWidget, QCheckBox, QLabel, QPushButton)
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -42,3 +44,60 @@ class LabelPositionDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        self.initializeUI()
+    
+    def initializeUI(self):
+        """Initialize the window and display its contents to the screen."""
+        self.setGeometry(300, 300, 250, 150)
+        self.setWindowTitle('Label Quadrant Position')
+        self.displayCheckBoxes()
+        self.displayButton()
+        
+    def displayCheckBoxes(self):
+        """Setup the checkboxes and other widgets"""
+        # Set up first text
+        header_label = QLabel(self)
+        header_label.setText("The field quadrant_position does not exists!")
+        header_label.setWordWrap(True)
+        header_label.move(15, 15)
+        header_label.resize(250, 16)
+        # Set up second text
+        header_label1 = QLabel(self)
+        header_label1.setText("Would you like to create it?")
+        header_label1.setWordWrap(True)
+        header_label1.move(15, 40)
+        header_label1.resize(250, 16)
+        # Set up checkboxes
+        virtual_cb = QCheckBox("Virtual field", self) # text, parent
+        virtual_cb.move(20, 70)
+        # virtual_cb.toggle() # uncomment if you want box to start off checked,
+                     # shown as an example here.
+        virtual_cb.stateChanged.connect(self.printToTerminal)
+        normal_cb = QCheckBox("Normal field", self) # text, parent
+        normal_cb.move(135, 70)
+        # normal_cb.toggle()
+        normal_cb.stateChanged.connect(self.printToTerminal)
+
+    def displayButton(self):
+        """Setup the button widget."""
+        # Set up apply button
+        apply_button = QPushButton('Apply', self)
+        # apply_button.clicked.connect(self.buttonClicked)
+        apply_button.move(45, 110) # arrange button
+        # Set up cancel button
+        cancel_button = QPushButton('Cancel', self)
+        # cancel_button.clicked.connect(self.buttonClicked)
+        cancel_button.move(130, 110) # arrange button
+
+    def printToTerminal(self, state): # pass state of checkbox
+        """
+        Simple function to show how to determine the state of a checkbox.
+        Prints the text label of the checkbox by determining which widget is sending the signal .
+        """
+        
+        sender = self.sender()
+        if state == Qt.Checked:
+            print("{} Selected.".format(sender.text()))
+        else:
+            print("{} Deselected.".format(sender.text()))
+        

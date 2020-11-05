@@ -72,10 +72,10 @@ class LabelPosition():
 
         # Set custom variables
         self.field_name = 'quadrant_position'
+        self.dlg = LabelPosition_dialog.LabelPositionDialog()
         self.lyr = self.iface.activeLayer()
         self.selected = self.lyr.selectedFeatures()
         self.number_sel_feat = self.lyr.selectedFeatureCount()
-        self.dlg = LabelPosition_dialog.LabelPositionDialog()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -190,10 +190,10 @@ class LabelPosition():
     def run(self):
         """Run method that performs all the real work"""
 
-        a = Manager.validate_field(self, self.lyr)
-        print(a)
+        Manager.validate_field(self)
+        
 
-        # Manager.setQuadrantPos(self, a)
+        # Manager.setQuadrantPos(self)
 
 
 
